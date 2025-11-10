@@ -96,7 +96,145 @@ cd C:\xampp\htdocs
 git clone https://github.com/QuangTungMasterD/BTL_OpenSource.git
 ```
 ### 4.3. Setup database.
+```
+CREATE TABLE `roles` (
+   `idRole` int NOT NULL AUTO_INCREMENT,
+   `nameRole` varchar(45) NOT NULL,
+   PRIMARY KEY (`idRole`),
+   UNIQUE KEY `idRoles_UNIQUE` (`idRole`),
+   UNIQUE KEY `rolescol_UNIQUE` (`nameRole`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+ CREATE TABLE `topics` (
+   `idTopic` int NOT NULL AUTO_INCREMENT,
+   `nameTopic` varchar(45) NOT NULL,
+   `color` varchar(45) NOT NULL DEFAULT '0, 0, 255',
+   PRIMARY KEY (`idTopic`),
+   UNIQUE KEY `idTopics_UNIQUE` (`idTopic`),
+   UNIQUE KEY `topicscol_UNIQUE` (`nameTopic`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+ CREATE TABLE `users` (
+   `idUser` int NOT NULL AUTO_INCREMENT,
+   `username` varchar(45) NOT NULL,
+   `password` varchar(45) NOT NULL,
+   `phone` varchar(45) NOT NULL,
+   `idRole` int NOT NULL,
+   `avatar` varchar(255) NOT NULL DEFAULT 'uploads/images/users/No_Image_Available.jpg',
+   `createAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`idUser`),
+   UNIQUE KEY `idUsers_UNIQUE` (`idUser`),
+   UNIQUE KEY `phone_UNIQUE` (`phone`),
+   KEY `FK_users_roles_idx` (`idRole`),
+   CONSTRAINT `FK_users_roles` FOREIGN KEY (`idRole`) REFERENCES `roles` (`idRole`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=606 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+ CREATE TABLE `courses` (
+   `idCourse` int NOT NULL AUTO_INCREMENT,
+   `idTopic` int DEFAULT NULL,
+   `nameCourse` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+   `imgCourse` varchar(500) NOT NULL DEFAULT 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
+   `descrip` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+   `price` double NOT NULL DEFAULT '0',
+   `sale` double DEFAULT NULL,
+   `idTeacher` int NOT NULL,
+   `createAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`idCourse`),
+   UNIQUE KEY `idCourse_UNIQUE` (`idCourse`),
+   KEY `FK_courses_topics_idx` (`idTopic`),
+   KEY `FK_courses_users_idx` (`idTeacher`),
+   CONSTRAINT `FK_courses_topics` FOREIGN KEY (`idTopic`) REFERENCES `topics` (`idTopic`),
+   CONSTRAINT `FK_courses_users` FOREIGN KEY (`idTeacher`) REFERENCES `users` (`idUser`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+ CREATE TABLE `units` (
+   `idUnit` int NOT NULL AUTO_INCREMENT,
+   `idCourse` int NOT NULL,
+   `nameUnit` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+   `order` int NOT NULL,
+   `createAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`idUnit`),
+   UNIQUE KEY `idUnits_UNIQUE` (`idUnit`),
+   KEY `FK_units_courses_idx` (`idCourse`),
+   CONSTRAINT `FK_units_courses` FOREIGN KEY (`idCourse`) REFERENCES `courses` (`idCourse`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+ CREATE TABLE `lessons` (
+   `idLesson` int NOT NULL AUTO_INCREMENT,
+   `idUnit` int NOT NULL,
+   `nameLesson` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+   `descrip` varchar(255) DEFAULT NULL,
+   `urlVideo` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+   `order` int NOT NULL,
+   `createAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`idLesson`),
+   UNIQUE KEY `idLessons_UNIQUE` (`idLesson`),
+   KEY `FK_lessions_units_idx` (`idUnit`),
+   CONSTRAINT `FK_lessions_units` FOREIGN KEY (`idUnit`) REFERENCES `units` (`idUnit`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `comments` (
+   `idComment` int NOT NULL AUTO_INCREMENT,
+   `idLesson` int NOT NULL,
+   `idUser` int NOT NULL,
+   `Content` longtext NOT NULL,
+   `updateAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `CreateAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `parentComment` int DEFAULT NULL,
+   PRIMARY KEY (`idComment`),
+   UNIQUE KEY `idComment_UNIQUE` (`idComment`),
+   KEY `FK_comments_users_idx` (`idUser`),
+   KEY `FK_commets_lessons_idx` (`idLesson`),
+   KEY `FK_comments_comments_idx` (`parentComment`),
+   CONSTRAINT `FK_comments_comments` FOREIGN KEY (`parentComment`) REFERENCES `comments` (`idComment`),
+   CONSTRAINT `FK_comments_users` FOREIGN KEY (`idUser`) REFERENCES `users` (`idUser`),
+   CONSTRAINT `FK_commets_lessons` FOREIGN KEY (`idLesson`) REFERENCES `lessons` (`idLesson`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+ CREATE TABLE `ratings` (
+   `idRating` int NOT NULL AUTO_INCREMENT,
+   `idStudent` int NOT NULL,
+   `idCourse` int NOT NULL,
+   `rated` double NOT NULL,
+   `content` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+   `updateAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`idRating`),
+   UNIQUE KEY `idratings_UNIQUE` (`idRating`),
+   KEY `FK_ratings_users_idx` (`idStudent`),
+   KEY `FK_ratings_courses_idx` (`idCourse`),
+   CONSTRAINT `FK_ratings_courses` FOREIGN KEY (`idCourse`) REFERENCES `courses` (`idCourse`),
+   CONSTRAINT `FK_ratings_users` FOREIGN KEY (`idStudent`) REFERENCES `users` (`idUser`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+ CREATE TABLE `registered_courses` (
+   `idRegis` int NOT NULL AUTO_INCREMENT,
+   `idStudent` int NOT NULL,
+   `idCourse` int NOT NULL,
+   `costed` double NOT NULL DEFAULT '0',
+   `registerAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`idRegis`),
+   UNIQUE KEY `idRegis_UNIQUE` (`idRegis`),
+   KEY `FK_regisCourses_students_idx` (`idStudent`),
+   KEY `FK_regisCourses_courses_idx` (`idCourse`),
+   CONSTRAINT `FK_regisCourses_courses` FOREIGN KEY (`idCourse`) REFERENCES `courses` (`idCourse`),
+   CONSTRAINT `FK_regisCourses_students` FOREIGN KEY (`idStudent`) REFERENCES `users` (`idUser`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+ CREATE TABLE `progress_learns` (
+   `idProgress` int NOT NULL AUTO_INCREMENT,
+   `idStudent` int NOT NULL,
+   `idLesson` int NOT NULL,
+   `state` tinyint NOT NULL DEFAULT '0',
+   `updateAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `createAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`idProgress`),
+   UNIQUE KEY `idProgresslearns_UNIQUE` (`idProgress`),
+   KEY `FK_progress_users_idx` (`idStudent`),
+   KEY `FK_progress_lesson_idx` (`idLesson`),
+   CONSTRAINT `FK_progress_lesson` FOREIGN KEY (`idLesson`) REFERENCES `lessons` (`idLesson`),
+   CONSTRAINT `FK_progress_users` FOREIGN KEY (`idStudent`) REFERENCES `users` (`idUser`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+```
 ### 4.4. Setup tham số kết nối.
 ```php
 <?php
