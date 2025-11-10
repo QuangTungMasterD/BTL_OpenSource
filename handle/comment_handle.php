@@ -64,10 +64,11 @@ function handleAddCommentByUser() {
   if($content == '') $_SESSION['errors']['content'] = 'Vui lòng nhập nội dung bình luận.';
   $data = [];
   if (empty($_SESSION['errors'])) {
-    $isAdd = addComment($lesson, $user, $content, $parentComment);
-    $data['success'] = $isAdd;
+    $id = addComment($lesson, $user, $content, $parentComment);
+    $data['success'] = true;
     $data['user'] = getUserById($user);
     $data['comment']['content'] = $content;
+    $data['comment']['id'] = $id;
   } else {
     $data['success'] = false;
   }
@@ -81,6 +82,13 @@ function handleDeleteComment($id) {
   $_SESSION['notifi'] = $isDeleteComment ? "Xóa bình luận thành công" : "Xóa thất bại";
 
   header('Location: ' . $_SESSION['prev_url']);
+}
+
+function handleDeleteCommentByUser($id) {
+  $isDeleteComment = deleteComment($id);
+  $data['success'] = $isDeleteComment;
+  header('Content-Type: application/json');
+  echo json_encode($data);
 }
 
 function handleGetCommentById($id) {
@@ -157,6 +165,11 @@ if (isset($_GET['action'])) {
     case 'edit': {
       if(isset($_POST['id'])) {
         handleEditComment($_POST['id']);
+      }
+    }
+    case 'delete': {
+      if(isset($_POST['idComment'])) {
+        handleDeleteCommentByUser($_POST['idComment']);
       }
     }
   }

@@ -17,12 +17,20 @@ $idCourse = $_GET['id'] ?? '';
 $idUser = $_SESSION['user_id'];
 $course = handleGetCourseById($idCourse);
 $lessonLearning = getLessonById($_GET['l'] ?? '');
+
 $comments = handleGetCommentByLesson($lessonLearning['idLesson'] ?? '');
 if (!isset($course)) {
   $_SESSION['notifi'] = "Khóa học không tồn tại";
   $_SESSION['isSuccessNotify'] = false;
   header('Location: ./../../index.php');
   exit();
+}
+if ($lessonLearning == '') {
+  $unitsCourse = getUnitByIdCourse($course['idCourse']);
+  $lessonsCourses = getLessonByIdUnit($unitsCourse[0]['idUnit']);
+  if (count($lessonsCourses) > 0) {
+    header('Location: ./index.php?id=' . $idCourse . '&l=' . $lessonsCourses[0]['idLesson']);
+  }
 }
 $currentUser = handleGetUserById($idUser);
 $registerCourse = getRegisteresCourseByIdUserAndCourseRegis($idUser, $idCourse);
@@ -57,7 +65,7 @@ $units = getUnitByIdCourse($course['idCourse']);
       <div class="grid col-span-3">
         <div class="col-span-3 bg-black h-[calc(100vh-var(--height-header))] w-[100%] rounded-md relative">
           <? if (isset($lessonLearning['urlVideo']) && $lessonLearning['urlVideo'] != '') { ?>
-            <video class="h-[calc(100vh-var(--height-header))] rounded-md mx-auto" src="./../../<?= $lessonLearning['urlVideo'] ?>" controls></video>
+            <video autoplay class="h-[calc(100vh-var(--height-header))] rounded-md mx-auto" src="./../../<?= $lessonLearning['urlVideo'] ?>" controls></video>
           <? } else { ?>
             <div class="h-[calc(100vh-var(--height-header))] rounded-md text-3xl text-white left-[50%] select-lesson-notify">Hãy chọn bài học</div>
           <? } ?>
@@ -78,9 +86,14 @@ $units = getUnitByIdCourse($course['idCourse']);
                   <div class="ml-3 text-gray-600 flex">
                     <p><?= $userComment['username'] ?></p>
                     <div class="ml-4">
-                      <?if($comment['idUser'] == $_SESSION['user_id'] || $_SESSION['role'] == 'Admin') {?>
-                        <a href="./../../handle/comment_handle.php?id=<?=$comment['idComment']?>&action=delete" class="text-[12px] underline text-gray-400 hover:text-gray-600">Xóa</a>  
-                      <?}?>
+                      <? if ($comment['idUser'] == $_SESSION['user_id'] || $_SESSION['role'] == 'Admin') { ?>
+                        <button data-modal-target="popup-modal"
+                          data-modal-toggle="popup-modal"
+                          data-id-comment="<?= htmlspecialchars($comment['idComment']) ?>"
+                          class="open-delete-modal text-[12px] underline text-gray-400 hover:text-gray-600" data-id-comment="<?= $comment['idComment']?>">
+                          Xóa
+                        </button>
+                      <? } ?>
                     </div>
                   </div>
                 </div>
@@ -89,9 +102,9 @@ $units = getUnitByIdCourse($course['idCourse']);
                 </div>
               </div>
             <? } ?>
-            
+
           </div>
-          <?if(isset($lessonLearning)) {?>
+          <? if (isset($lessonLearning)) { ?>
             <form class="block mt-6" id="add-comment">
               <div class="flex items-center">
                 <div class="bg-center bg-no-repeat bg-cover w-[44px] h-[44px] rounded-[50%] border border-[#dfdfdf]" style="background-image: url('./../../<?= $currentUser['avatar'] ?>');"></div>
@@ -105,7 +118,7 @@ $units = getUnitByIdCourse($course['idCourse']);
                 <button type="submit" class="btn primary inline-block mt-2">Gửi</button>
               </div>
             </form>
-          <?}?>
+          <? } ?>
         </div>
       </div>
       <div class="col-span-1">
@@ -133,11 +146,75 @@ $units = getUnitByIdCourse($course['idCourse']);
   </div>
 
   <? include "./../components/footer.php"; ?>
+
+  <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+      <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+        <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+        <div class="p-4 md:p-5 text-center">
+          <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          <h3 id="content-modal-delete" class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400"></h3>
+          <button data-modal-hide="popup-modal" type="button" id="confirm-delete" class="delete-comment-btn text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+            Xóa
+          </button>
+          <button data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Hủy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const form = document.getElementById('add-comment');
+      let openButtons = document.querySelectorAll('.open-delete-modal');
+      const confirmDeleteBtn = document.getElementById('confirm-delete');
+      const contenModal = document.getElementById('content-modal-delete');
 
+      function handleOpenButtons() {
+        openButtons = document.querySelectorAll('.open-delete-modal');
+        openButtons.forEach((btn) => {
+          btn.onclick = function() {
+            const commentId = btn.getAttribute('data-id-comment');
+            confirmDeleteBtn.setAttribute('data-id-comment', `${commentId}`);
+            contenModal.innerText = `Bạn có chắc chắn muốn xóa bình luận này?`
+          }
+        })
+      }
+      handleOpenButtons();
+
+      confirmDeleteBtn.onclick = async () => {
+        const currentDeleteId = confirmDeleteBtn.getAttribute('data-id-comment');
+        const formData = new FormData();
+        formData.append('idComment', currentDeleteId);
+        formData.append('action', 'delete');
+
+        try {
+          const response = await fetch(`./../../handle/comment_handle.php`, {
+            method: 'POST',
+            body: formData
+          });
+          const result = await response.json();
+
+          if (result.success) {
+            const btn = document.querySelector(`.open-delete-modal[data-id-comment="${currentDeleteId}"]`);
+            if (btn) btn.closest('.border-b').remove();
+          } else {
+            alert('Xóa thất bại!');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Có lỗi xảy ra!');
+        }
+      };
+
+      const form = document.getElementById('add-comment');
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -149,7 +226,7 @@ $units = getUnitByIdCourse($course['idCourse']);
           });
 
           const result = await response.json();
-          
+
           if (result.success) {
             const commentSection = document.querySelector('.comment-content');
             const newComment = document.createElement('div');
@@ -157,17 +234,29 @@ $units = getUnitByIdCourse($course['idCourse']);
             newComment.innerHTML = `
               <div class="flex items-center">
                 <div class="bg-center bg-no-repeat bg-cover w-[44px] h-[44px] rounded-[50%] border border-[#dfdfdf]" style="background-image: url('./../../${result.user.avatar}');"></div>
-                <div class="ml-3 text-gray-600">${result.user.username}</div>
+                <div class="ml-3 text-gray-600 flex">
+                  <p>${result.user.username}</p>
+                  <div class="ml-4">
+                    <button data-modal-target="popup-modal"
+                      data-modal-toggle="popup-modal"
+                      data-id-comment="${result.comment.id}"
+                      class="open-delete-modal text-[12px] underline text-gray-400 hover:text-gray-600" data-id-comment="${result.comment.id}">
+                      Xóa
+                    </button>
+                  </div>
+                </div>
               </div>
               <div class="mt-3 text-gray-600">
                 ${result.comment.content}
               </div>
             `;
             commentSection.appendChild(newComment);
-
+            if (window.initFlowbite) {
+              initFlowbite();
+            }
             form.reset();
-          } else {
-          }
+            handleOpenButtons();
+          } else {}
         } catch (error) {
           alert('Có lỗi xảy ra, vui lòng thử lại!');
         }

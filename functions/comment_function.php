@@ -198,10 +198,12 @@ function addComment($idLesson, $idUser, $Content, $parentComment) {
   if ($stmt) {
     mysqli_stmt_bind_param($stmt, "iisi", $idLesson, $idUser, $Content, $parentComment);
     $success = mysqli_stmt_execute($stmt);
+    $insertId = mysqli_insert_id($conn); // Lấy ID vừa insert
 
     mysqli_stmt_close($stmt);
     mysqli_close($conn);
-    return $success;
+
+    return $success ? $insertId : false;
   }
 
   mysqli_close($conn);
