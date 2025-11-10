@@ -206,11 +206,9 @@ $units = getUnitByIdCourse($course['idCourse']);
             const btn = document.querySelector(`.open-delete-modal[data-id-comment="${currentDeleteId}"]`);
             if (btn) btn.closest('.border-b').remove();
           } else {
-            alert('Xóa thất bại!');
           }
         } catch (err) {
           console.error(err);
-          alert('Có lỗi xảy ra!');
         }
       };
 
@@ -258,7 +256,6 @@ $units = getUnitByIdCourse($course['idCourse']);
             handleOpenButtons();
           } else {}
         } catch (error) {
-          alert('Có lỗi xảy ra, vui lòng thử lại!');
         }
       });
     });
