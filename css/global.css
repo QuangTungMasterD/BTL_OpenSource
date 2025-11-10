@@ -1,0 +1,88 @@
+:root {
+  --primary-color: 30, 144, 255;
+  --primary-color-l2: 102, 126, 234;
+  --height-header: 68px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f6f9ff;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* css global btn */
+.btn {
+  font-size: 15px;
+  padding: 10px 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  outline: none;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.btn + .btn {
+  /* margin-left: 8px; */
+}
+
+.btn.primary {
+  background-color: rgb(var(--primary-color));
+  color: #fff;
+  border: 1px solid rgb(var(--primary-color));
+}
+
+.btn.danger {
+  background-color: rgb(247, 64, 64);
+  color: #fff;
+  border: 1px solid rgb(247, 64, 64);
+}
+
+.btn.danger:hover {
+  background-color: rgba(247, 64, 64, 0.9);
+}
+
+.btn.primary:hover {
+  background-color: rgba(var(--primary-color), 0.9);
+}
+
+.btn.outline {
+  border: 1px solid rgb(var(--primary-color));
+  background-color: rgba(var(--primary-color), 0.15);
+  color: rgb(var(--primary-color));
+}
+
+.btn.outline:hover {
+  background-color: rgba(var(--primary-color), 0.25);
+}
+
+.btn.rounded {
+  border-radius: 28px;
+  padding: 6px 14px;
+}
+
+.btn.ghost {
+  padding: 0px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.btn.ghost:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+.group-content {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0px 0px 4px #ebebeb;
+}

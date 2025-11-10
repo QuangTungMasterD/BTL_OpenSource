@@ -1,0 +1,16 @@
+.select-lesson-notify {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 46%;
+}
+
+.header-sidebar {
+  display: -webkit-box;
+  line-height: 36px;
+  max-height: 72px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}

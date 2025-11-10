@@ -1,0 +1,71 @@
+
+
+.primary.pagination-item, .outline.pagination-item {
+  padding-right: 17px;
+  padding-left: 17px;
+  max-width: 44px;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination-item + .pagination-item {
+  margin-left: 8px;
+}
+
+.ghost.pagination-item {
+  font-size: 26px;
+  color: rgb(var(--primary-color));
+}
+
+.ghost.pagination-item:hover {
+  color: rgba(var(--primary-color), 0.8);
+}
+
+.pagination-list {
+}
+
+.action>*>*:nth-child(n+2) {
+  margin-left: 6px;
+}
+
+.action>*:nth-child(n+2) {
+  margin-left: 6px;
+}
+
+.input-search {
+  font-size: 15px;
+  padding-right: 44px;
+  padding-left: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  outline: none;
+  border: 2px solid rgb(var(--primary-color));
+}
+
+.action-object > a:nth-child(1) {
+  color: rgb(var(--primary-color));
+}
+
+.action-object > a:nth-child(2) {
+  color: rgb(4, 174, 4);
+}
+
+.action-object > a:nth-child(2) {
+  color: rgb(247, 60, 60);
+}
+
+.action-object-item {
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+.topic {
+  padding: 4px 16px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  display: inline-flex;
+}

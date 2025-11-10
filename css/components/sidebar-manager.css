@@ -1,0 +1,51 @@
+
+.manager-sidebar {
+  
+}
+
+.side-bar-items {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: calc(100% - 24px);
+  padding: 14px 14px;
+  font-size: 18px;
+  border-radius: 6px;
+  margin: 2px auto;
+}
+
+.side-bar-items-child {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: calc(90% - 24px);
+  padding: 14px 14px;
+  font-size: 18px;
+  border-radius: 6px;
+  margin: 0px auto;
+  margin-bottom: 0;
+}
+
+.side-bar-items-child:hover {
+  color: #fcfcfc;
+  background-color: rgb(var(--primary-color), 0.9);
+}
+
+.side-bar-items i {
+  margin-left: auto;
+}
+
+.side-bar-items:hover {
+  color: #fcfcfc;
+  background-color: rgb(var(--primary-color), 0.9);
+}
+
+li {
+  margin: 1px 0;
+}
+
+#dropdown-manager-courses {
+  border-top: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  background: #f8f8f8;
+}

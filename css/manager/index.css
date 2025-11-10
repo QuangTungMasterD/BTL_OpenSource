@@ -1,0 +1,32 @@
+
+.total-statistical {
+  background-color: white;
+  padding: 28px;
+  border-radius: 14px;
+  color: #fcfcfc;
+}
+
+.total-statistical:nth-child(1) {
+  background-color: rgb(var(--primary-color));
+}
+
+.total-statistical:nth-child(2) {
+  background-color: rgb(49, 190, 49);
+}
+
+.total-statistical:nth-child(3) {
+  background-color: rgb(255, 74, 74);
+}
+
+.total-statistical i {
+  font-size: 30px;
+}
+
+.total-statistical div:nth-child(2) {
+  font-size: 28px;
+  letter-spacing: 2px;
+  font-weight: 500;
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+

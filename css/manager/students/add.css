@@ -1,0 +1,40 @@
+
+.form-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-input + .form-input {
+  margin-top: 12px;
+}
+
+.form-input.action {
+  display: flex;
+  flex-direction: row;
+  margin-top: 36px;
+}
+
+.label {
+  color: oklch(44.6% 0.03 256.802);
+  margin-bottom: 5px;
+}
+
+.input {
+  border: 2px solid #eee;
+  padding: 12px 16px;
+  border-radius: 6px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.notifi {
+  font-size: 14px;
+}
+
+.select {
+  border: 2px solid #eee;
+  padding: 12px 16px;
+  border-radius: 6px;
+}
