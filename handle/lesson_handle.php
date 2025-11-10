@@ -106,6 +106,12 @@ function handleEditLesson($id)
       $uploadDir = __DIR__ . '/../uploads/videos/lessons/';
       if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
+      $lesson = getLessonById($id);
+
+      if (!empty($lesson['urlVideo']) && file_exists(__DIR__ . '/../' . $lesson['urlVideo'])) {
+          unlink(__DIR__ . '/../' . $lesson['urlVideo']);
+      }
+
       $ext = pathinfo($videoFile['name'], PATHINFO_EXTENSION);
       $fileName = uniqid('video_') . '.' . $ext;
       $targetFile = $uploadDir . $fileName;
