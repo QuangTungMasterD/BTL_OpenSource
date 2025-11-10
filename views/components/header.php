@@ -98,7 +98,7 @@ unset($_SESSION['notifi'], $_SESSION['isSuccessNotify']);
 
     <div class="action flex flex-1 justify-end">
       <? if (!isLoggedIn()) { ?>
-        <!-- <a href="/BTL-N2/views/auth/register.php" class="flex items-center btn ghost cursor-pointer">Đăng ký</a> -->
+        <a href="/BTL-N2/views/auth/register.php" class="flex items-center btn ghost cursor-pointer">Đăng ký</a>
         <a href="/BTL-N2/views/auth/login.php" class="flex items-center btn primary rounded ml-6">Đăng nhập</a>
       <? } else { ?>
         <!-- <button class="text-[15px] font-[500] hover:text-black flex items-center justify-center text-[#444]">

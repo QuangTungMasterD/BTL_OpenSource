@@ -1,10 +1,9 @@
 <?
 session_start();
-
-$error = $_SESSION['errors'] ?? '';
-unset($_SESSION['errors']);
+$error =  $_SESSION['error'];
+unset($_SESSION['error']);
 if(isset($_SESSION['user_id']) && isset($_SESSION['phone'])) {
-  header('Location: ' . $_SESSION['prev_url']);
+  header('Location: ./../../index.php');
 };
 ?>
 
@@ -57,8 +56,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['phone'])) {
           </div>
           <button type="submit" class="btn primary w-[100%] mt-10 button-login">Đăng nhập</button>
           <div class="mt-12 flex flex-col items-center justify-center">
-            <div class="text-[rgb(var(--primary-color))] hover:underline cursor-pointer">Quên mật khẩu</div>
-            <div class="mt-4">Chưa có tài khoản? <a href="" class="text-[rgb(var(--primary-color))] hover:underline cursor-pointer">Đăng ký</a></div>
+            <div class="mt-4">Chưa có tài khoản? <a href="./register.php" class="text-[rgb(var(--primary-color))] hover:underline cursor-pointer">Đăng ký</a></div>
           </div>
         </div>
       </form>

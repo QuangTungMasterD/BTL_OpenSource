@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 require_once __DIR__ . '/../functions/user_function.php';
+require_once __DIR__ . '/auth_handle.php';
 require_once __DIR__ . '/../functions/registered-courses_function.php';
 
 function handleGetUser($valueSearch = '', $page = 1)
@@ -37,7 +38,11 @@ function handleAddUser()
   $phone = ($_POST['phone'] ?? '');
   $password = ($_POST['password'] ?? '');
   $confirm = ($_POST['confirmpassword'] ?? '');
-  $role = $_POST['role'] ?? '';
+  if(isLoggedIn() && $_SESSION['role'] == 'Admin') {
+    $role = $_POST['role'] ?? '';
+  } else {
+    $role = 3;
+  }
 
   $_SESSION['old'] = compact('username', 'phone', 'password', 'confirm', 'role');
 
@@ -58,10 +63,19 @@ function handleAddUser()
 
     $_SESSION['notifi'] = $isAdd ? "Thêm người dùng mới thành công" : "Thêm người dùng mới thất bại";
     $_SESSION['isSuccessNotify'] = $isAdd;
+    if(!isLoggedIn()) {
+      header("Location: ./../views/auth/login.php");
+      exit;
+    }
+
     header("Location: ./../views/manager/users/index.php?page=" . $page);
     exit;
   }
 
+  if(!isLoggedIn()) {
+    header("Location: ./../views/auth/register.php");
+    exit;
+  }
   header("Location: ./../views/manager/users/add.php");
 }
 

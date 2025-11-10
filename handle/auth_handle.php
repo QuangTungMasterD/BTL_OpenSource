@@ -24,6 +24,7 @@
 
     if (!isset($_SESSION['user_id']) || !isset($_SESSION['phone'])) {
         $_SESSION['notifi'] = 'Bạn cần đăng nhập để truy cập trang này!';
+        $_SESSION['isSuccessNotify'] = false;
         header('Location: /BTL-N2/views/auth/login.php');
         exit();
     }
@@ -33,8 +34,8 @@
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    $_SESSION['notifi'] = 'Bạn cần đăng nhập để truy cập trang này!';
-    return isset($_SESSION['user_id']) && isset($_SESSION['phone']);
+    $isLogin = isset($_SESSION['user_id']) && isset($_SESSION['phone']);
+    return $isLogin;
   }
 
   function isTeacherLogin() {
@@ -67,7 +68,7 @@
     $password = $_POST['password'] ?? '';
     
     if (empty($phone) || empty($password)) {
-        $_SESSION['errors'] = 'Vui lòng nhập đầy đủ phone và password!';
+        $_SESSION['error'] = 'Vui lòng nhập đầy đủ phone và password!';
         header('Location: ../views/auth/login.php');
         exit();
     }
@@ -83,7 +84,7 @@
         exit();
     }
 
-    $_SESSION['errors'] = 'Tên đăng nhập hoặc mật khẩu không đúng!';
+    $_SESSION['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng!';
     mysqli_close($conn);
     header('Location: ../views/auth/login.php');
     exit();
