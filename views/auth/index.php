@@ -68,7 +68,7 @@
                 <div class="text-md text-lg text-gray-600"><?=$course['descrip']?></div>
                 <div class="text-md text-gray-500 mt-1 mb-3">Giáo viên: <?=$teacher['username']?></div>
                 <div class="">
-                  <a href="./../learning/index.php?id=<?=$course['idCourse']?>" class="btn primary inline-block">Tiếp tục học</a>
+                  <a href="./../learning/index.php?id=<?=$course['idCourse']?>" class="btn primary inline-block">Học</a>
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 <?
 session_start();
-$error =  $_SESSION['error'];
+$error =  $_SESSION['error'] ?? '';
 unset($_SESSION['error']);
 if(isset($_SESSION['user_id']) && isset($_SESSION['phone'])) {
   header('Location: ./../../index.php');

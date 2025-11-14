@@ -63,7 +63,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['phone'])) {
 
           <div class="form-input mt-6">
             <label for="">Xác nhận mật khẩu</label>
-            <input type="password" name="confirm" class="input" placeholder="Nhập lại mật khẩu" required />
+            <input type="password" name="confirmpassword" class="input" placeholder="Nhập lại mật khẩu" required />
             <?php if(isset($errors['confirm'])) { ?>
               <p class="notifi text-red-600"><?= htmlspecialchars($errors['confirm']) ?></p>
             <?php }; ?>
