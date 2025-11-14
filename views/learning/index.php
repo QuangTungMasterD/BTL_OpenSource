@@ -27,9 +27,11 @@ if (!isset($course)) {
 }
 if ($lessonLearning == '') {
   $unitsCourse = getUnitByIdCourse($course['idCourse']);
-  $lessonsCourses = getLessonByIdUnit($unitsCourse[0]['idUnit']);
-  if (count($lessonsCourses) > 0) {
-    header('Location: ./index.php?id=' . $idCourse . '&l=' . $lessonsCourses[0]['idLesson']);
+  if(count($unitsCourse) > 0) {
+    $lessonsCourses = getLessonByIdUnit($unitsCourse[0]['idUnit']);
+    if (count($lessonsCourses) > 0) {
+      header('Location: ./index.php?id=' . $idCourse . '&l=' . $lessonsCourses[0]['idLesson']);
+    }
   }
 }
 $currentUser = handleGetUserById($idUser);
